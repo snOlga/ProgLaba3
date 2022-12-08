@@ -12,7 +12,7 @@ public class prog3
         Znayka.nature = Human.Nature.IMPATIENT;
         Seledochka.nature = Human.Nature.PRIDEFUL;
 
-        Znayka.ask(Znayka, Seledochka);
+        Znayka.ask(Seledochka);
 
         if (Seledochka.loc != Fuksia.loc)
         {

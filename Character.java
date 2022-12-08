@@ -99,24 +99,24 @@ public class Character extends Human implements canGo, canShake, canPush, canAsk
     }
 
     @Override
-    public void ask(Character asker, Character victim)
+    public void ask( Character victim)
     {
-        System.out.println(asker.name + " спросил " + victim.name);
+        System.out.println(this.name + " спросил " + victim.name);
 
-        if (asker.nature == Nature.IMPATIENT)
+        if (this.nature == Nature.IMPATIENT)
         {
-            System.out.println(asker.name + " не дождался/ась ответа");
-            asker.shake(asker, victim);
+            System.out.println(this.name + " не дождался/ась ответа");
+            this.shake(this, victim);
         }
-        if(asker.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.loc == Locations.STREET)
+        if(this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.loc == Locations.STREET)
         {
             victim.go(Locations.HOUSE);
-            asker.emo = Emotions.SAD;
+            this.emo = Emotions.SAD;
         }
-        else if(asker.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.loc == Locations.HOUSE)
+        else if(this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.loc == Locations.HOUSE)
         {
             victim.go(Locations.STREET);
-            asker.emo = Emotions.SAD;
+            this.emo = Emotions.SAD;
         }
     }
 
