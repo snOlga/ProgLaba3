@@ -1,4 +1,4 @@
 public interface canPush
 {
-    public void push (Character buller, Character victim);
+    public void push (Character victim);
 }

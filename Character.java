@@ -69,9 +69,9 @@ public class Character extends Human implements canGo, canShake, canPush, canAsk
         loc = newLoc;
     }
     @Override
-    public void shake(Character shaker, Character victim)
+    public void shake(Character victim)
     {
-        System.out.println(shaker.name + " трясёт " + victim.name);
+        System.out.println(this.name + " трясёт " + victim.name);
         victim.emo = Emotions.ANGRY;
         System.out.println("Теперь " + victim.name + " " + victim.emo.status);
 
@@ -85,28 +85,28 @@ public class Character extends Human implements canGo, canShake, canPush, canAsk
         }
         else if(victim.nature == Nature.TESTY)
         {
-            victim.push(victim,shaker);
+            victim.push(this);
         }
     }
 
     @Override
-    public void push (Character buller, Character victim)
+    public void push (Character victim)
     {
-        buller.emo = Emotions.ANGRY;
+        this.emo = Emotions.ANGRY;
         victim.emo = Emotions.SCARED;
 
         victim.status = Status.PUSHED;
     }
 
     @Override
-    public void ask( Character victim)
+    public void ask(Character victim)
     {
         System.out.println(this.name + " спросил " + victim.name);
 
         if (this.nature == Nature.IMPATIENT)
         {
             System.out.println(this.name + " не дождался/ась ответа");
-            this.shake(this, victim);
+            this.shake(victim);
         }
         if(this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.loc == Locations.STREET)
         {
