@@ -1,4 +1,4 @@
 public interface canAsk
 {
-    public void ask(Character victim);
+    public void ask(Character victim) throws HumanIsDiedExeption;
 }

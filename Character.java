@@ -1,30 +1,14 @@
-public class Character extends Human implements canGo, canShake, canPush, canAsk
+public class Character extends Human
 {
-    Locations loc = Locations.STREET;
-    Emotions emo = Emotions.NORMAL;
+    Location location = Location.STREET;
+    Emotions emotions = Emotions.NORMAL;
     Nature nature = Nature.USUAL;
     Status status = Status.NORMAL;
+    static Emotions emotionsForEveryone;
 
 
 
 
-    enum Locations
-    {
-        HOUSE ("в домике"),
-        STREET ("на улице");
-
-        private String status;
-
-        Locations(String status)
-        {
-            this.status = status;
-        }
-
-        public String getStatus()
-        {
-            return status;
-        }
-    }
 
     enum Emotions
     {
@@ -32,7 +16,10 @@ public class Character extends Human implements canGo, canShake, canPush, canAsk
         ANGRY ("злой/ая"),
         HAPPY ("счастливый/ая"),
         NORMAL ("обычный/ая"),
-        SCARED("испугался/ась");
+        SCARED ("испугался/ась"),
+        CALM ("спокоен/а"),
+        CONFUSED ("растерянн/а"),
+        NERVOUS ("взволнован/а");
 
         private String status;
 
@@ -51,37 +38,49 @@ public class Character extends Human implements canGo, canShake, canPush, canAsk
 
 
 
-
     public void newEmotion()
     {
-        System.out.println(name + " теперь " + emo.status);
+        System.out.println(name + " теперь " + emotions.status);
+
+        if (this.emotions == Emotions.CONFUSED)
+        {
+            System.out.println(name + " растерянно развел/а руками");
+        }
     }
 
     public void printLoc()
     {
-        System.out.println(name + " " + loc.status);
+        System.out.println(name + " " + location.getStatus());
     }
+
+
     @Override
-    public void go(Character.Locations newLoc)
+    public void go(Location newLocation)
     {
-        loc = newLoc;
-        System.out.println(name + " ушёл/а и теперь " + loc.status);
-        loc = newLoc;
+        location = newLocation;
+        System.out.println(name + " ушёл/а и теперь " + location.getStatus());
+    }
+
+    @Override
+    public void run(Location newLocation)
+    {
+        location = newLocation;
+        System.out.println(name + " убежал/а и теперь " + location.getStatus());
     }
     @Override
     public void shake(Character victim)
     {
         System.out.println(this.name + " трясёт " + victim.name);
-        victim.emo = Emotions.ANGRY;
-        System.out.println("Теперь " + victim.name + " " + victim.emo.status);
+        victim.emotions = Emotions.ANGRY;
+        System.out.println("Теперь " + victim.name + " " + victim.emotions.status);
 
-        if(victim.nature == Nature.PRIDEFUL && victim.loc == Locations.STREET)
+        if(victim.nature == Nature.PRIDEFUL && victim.location == Location.STREET)
         {
-            victim.go(Locations.HOUSE);
+            victim.go(Location.HOUSE);
         }
-        else if(victim.nature == Nature.PRIDEFUL && victim.loc == Locations.HOUSE)
+        else if(victim.nature == Nature.PRIDEFUL && victim.location == Location.HOUSE)
         {
-            victim.go(Locations.STREET);
+            victim.go(Location.STREET);
         }
         else if(victim.nature == Nature.TESTY)
         {
@@ -92,33 +91,99 @@ public class Character extends Human implements canGo, canShake, canPush, canAsk
     @Override
     public void push (Character victim)
     {
-        this.emo = Emotions.ANGRY;
-        victim.emo = Emotions.SCARED;
+        this.emotions = Emotions.ANGRY;
+        victim.emotions = Emotions.SCARED;
 
         victim.status = Status.PUSHED;
     }
 
     @Override
-    public void ask(Character victim)
+    public void ask (Character victim) throws HumanIsDiedExeption
     {
-        System.out.println(this.name + " спросил " + victim.name);
+        if (this.status != Status.DIED)
+        {
+            System.out.println(this.name + " спросил " + victim.name);
 
-        if (this.nature == Nature.IMPATIENT)
-        {
-            System.out.println(this.name + " не дождался/ась ответа");
-            this.shake(victim);
+
+            if (this.emotions == Emotions.NERVOUS)
+            {
+                System.out.println(this.name + " ничего не смог/ла сказать");
+            }
+            if (this.nature == Nature.IMPATIENT)
+            {
+                System.out.println(this.name + " не дождался/ась ответа");
+                this.shake(victim);
+            }
+            if (this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.location == Location.STREET && this.emotions == Emotions.NORMAL)
+            {
+                victim.go(Location.HOUSE);
+                this.emotions = Emotions.SAD;
+            } else if (this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.location == Location.HOUSE)
+            {
+                victim.go(Location.STREET);
+                this.emotions = Emotions.SAD;
+            }
         }
-        if(this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.loc == Locations.STREET)
+        else
         {
-            victim.go(Locations.HOUSE);
-            this.emo = Emotions.SAD;
-        }
-        else if(this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.loc == Locations.HOUSE)
-        {
-            victim.go(Locations.STREET);
-            this.emo = Emotions.SAD;
+            throw new HumanIsDiedExeption("Персонаж " + this.name + " мертв/а");
         }
     }
+
+    @Override
+    public void seePeople(Location location)
+    {
+        System.out.println(this.name + " увидел/а таких персонажей:");
+
+        for (int i = 0; i < prog3.characters.size(); i++)
+        {
+            if (prog3.characters.get(i).name == this.name)
+            {
+                continue;
+            }
+            else if (prog3.characters.get(i).location == location)
+            {
+                System.out.println(prog3.characters.get(i).name);
+            }
+        }
+    }
+
+    @Override
+    public boolean lookFor(newObject object)
+    {
+        if (object.location == this.location)
+        {
+            this.emotions = Emotions.HAPPY;
+            System.out.println(this.name + " нашёл/а " + object.name);
+            return true;
+        }
+        else
+        {
+            this.emotions = Emotions.ANGRY;
+            return false;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

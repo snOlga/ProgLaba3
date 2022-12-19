@@ -1,4 +1,4 @@
 public interface canGo
 {
-    public void go(Character.Locations newLoc);
+    public void go(Location newLocation);
 }

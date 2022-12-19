@@ -1,30 +1,71 @@
+import java.util.ArrayList;
+
 public class prog3
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws RocketIsBrokenExeption, NoneOfStatusExeption, HumanIsDiedExeption
     {
-        Character Znayka = new Character();
-        Znayka.name = "Знайка";
-        Character Seledochka = new Character();
-        Seledochka.name = "Селедочка";
-        Character Fuksia = new Character();
-        Fuksia.name = "Фуксия";
+        Character znayka = createCharacter("Знайка");
+        znayka.location = Location.HOUSE;
+        Character seledochka = createCharacter("Селедочка");
+        seledochka.location = Location.HOUSE;
+        Character fuchsia = createCharacter("Фуксия");
+        fuchsia.location = Location.HOUSE;
+        Character neznayka = createCharacter("Незнайка");
+        neznayka.location = Location.ROCKET;
 
-        Znayka.nature = Human.Nature.IMPATIENT;
-        Seledochka.nature = Human.Nature.PRIDEFUL;
-
-        Znayka.ask(Seledochka);
-
-        if (Seledochka.loc != Fuksia.loc)
+        FictionRocket rocket = new FictionRocket()
         {
-            Fuksia.go(Character.Locations.HOUSE);
-            Znayka.emo = Character.Emotions.SCARED;
-            Znayka.newEmotion();
+            @Override
+            public void doNoize()
+            {
+                System.out.println(this.name + " странно шумит!");
+                Character.emotionsForEveryone = Character.Emotions.SCARED;
+            }
+        };
+        rocket.name = "Ракета";
+        rocket.status = Rocket.Status.NORMAL;
+
+
+        znayka.nature = Human.Nature.IMPATIENT;
+        seledochka.nature = Human.Nature.PRIDEFUL;
+
+
+
+        rocket.doNoize();
+
+        rocket.fly(Location.COSMOS, neznayka);
+
+        if (rocket.location == Location.COSMOS && rocket.status == Rocket.Status.NORMAL)
+        {
+            seledochka.emotions = Character.Emotions.NERVOUS;
+            znayka.seePeople(Location.STREET);
         }
 
-        if (Seledochka.loc != Znayka.loc && Fuksia.loc != Znayka.loc && Znayka.emo == Character.Emotions.SCARED)
+
+        seledochka.ask(znayka);
+
+        znayka.ask(seledochka);
+
+        if (seledochka.location != fuchsia.location)
         {
-            Znayka.go(Seledochka.loc);
+            fuchsia.go(Location.HOUSE);
+            znayka.emotions = Character.Emotions.SCARED;
+            znayka.newEmotion();
         }
+
+        if (seledochka.location != znayka.location && fuchsia.location != znayka.location && znayka.emotions == Character.Emotions.SCARED)
+        {
+            znayka.go(seledochka.location);
+        }
+        znayka.seePeople(Location.HOUSE);
     }
+    static Character createCharacter(String name)
+    {
+        Character object = new Character();
+        object.name = name;
+        characters.add(object);
+        return object;
+    }
+    static ArrayList<Character> characters = new ArrayList<Character>();
 }
 

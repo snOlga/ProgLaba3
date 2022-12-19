@@ -1,4 +1,4 @@
-public abstract class Human
+public abstract class Human implements canGo, canShake, canPush, canAsk, canRun, canSee, LookFor
 {
     protected String name;
 
@@ -9,6 +9,7 @@ public abstract class Human
 
     protected int age;
     protected String gender;
+    Status status;
 
 
     enum Status
@@ -50,4 +51,6 @@ public abstract class Human
             return status;
         }
     }
+
+    //надо будто бы задать здесь "если пресонаж мёртв, то выдать ошибку" во всех наследуемых интерфейсах
 }
