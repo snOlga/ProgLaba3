@@ -57,4 +57,16 @@ public class FictionRocket extends Rocket
         System.out.println("Ракета шумит!");
         Character.emotionsForEveryone = Character.Emotions.NERVOUS;
     }
+
+    private class motor
+    {
+        private void doNoize()
+        {
+            System.out.println("Мотор шумит!");
+        }
+        private void breakMotor(FictionRocket rocket, Character pilot)
+        {
+            rocket.explode(pilot);
+        }
+    }
 }
