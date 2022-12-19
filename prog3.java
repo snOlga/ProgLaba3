@@ -13,15 +13,7 @@ public class prog3
         Character neznayka = createCharacter("Незнайка");
         neznayka.location = Location.ROCKET;
 
-        FictionRocket rocket = new FictionRocket()
-        {
-            @Override
-            public void doNoize()
-            {
-                System.out.println(this.name + " странно шумит!");
-                Character.emotionsForEveryone = Character.Emotions.SCARED;
-            }
-        };
+        FictionRocket rocket = new FictionRocket();
         rocket.name = "Ракета";
         rocket.status = Rocket.Status.NORMAL;
 
@@ -29,11 +21,23 @@ public class prog3
         znayka.nature = Human.Nature.IMPATIENT;
         seledochka.nature = Human.Nature.PRIDEFUL;
 
+        Gate thatGate = new Gate()
+        {
+            @Override
+            public void close()
+            {
+                System.out.println("Калитка захлопнулась!");
+            }
+        };
 
 
-        rocket.doNoize();
 
         rocket.fly(Location.COSMOS, neznayka);
+
+        if (znayka.location != Location.HOUSE)
+        {
+            thatGate.close();
+        }
 
         if (rocket.location == Location.COSMOS && rocket.status == Rocket.Status.NORMAL)
         {
