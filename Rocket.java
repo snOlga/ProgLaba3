@@ -1,4 +1,4 @@
-public abstract class Rocket implements canExplode, MachineFly
+public abstract class Rocket implements canExplode, MachineFly, MotorOn
 {
     protected String name;
     protected Location location;

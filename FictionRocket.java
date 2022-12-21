@@ -6,9 +6,7 @@ public class FictionRocket extends Rocket
     {
         if (this.status == Status.NORMAL)
         {
-            double randomChanceForExplosion = Math.random();
-
-            if (randomChanceForExplosion > 0.5)
+            if (motorOn() == false)
             {
                 this.explode(pilot);
 
@@ -19,9 +17,10 @@ public class FictionRocket extends Rocket
                 this.location = location;
 
                 Character.emotionsForEveryone = Character.Emotions.SCARED;
-                System.out.println("Все теперь " + Character.emotionsForEveryone.getStatus());
 
                 System.out.println(this.name + " теперь " + location.getStatus());
+
+                System.out.println("Все теперь " + Character.emotionsForEveryone.getStatus());
 
                 //вызвать go от всех экземпляров класса Character
                 for (int i = 0; i < prog3.characters.size(); i++)
@@ -58,15 +57,20 @@ public class FictionRocket extends Rocket
         Character.emotionsForEveryone = Character.Emotions.NERVOUS;
     }
 
-    private class motor
+    @Override
+    public boolean motorOn()
     {
-        private void doNoize()
+        double randomForMotorStop = Math.random();
+
+        if (randomForMotorStop > 0.5)
         {
-            System.out.println("Мотор шумит!");
+            System.out.println(this.name + " не заводится!");
+            return false;
         }
-        private void breakMotor(FictionRocket rocket, Character pilot)
+        else
         {
-            rocket.explode(pilot);
+            System.out.println("Мотор у объекта " + this.name + " гудит!");
+            return true;
         }
     }
 }
