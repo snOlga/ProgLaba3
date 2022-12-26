@@ -1,7 +1,8 @@
-public abstract class Rocket implements canExplode, MachineFly, MotorOn
+public abstract class Rocket extends NotAliveObject implements canExplode, MachineFly, Locatable, RocketSwitcher, checkAirInRocket
 {
-    protected String name;
     protected Location location;
+    protected int fuel;
+    protected int air;
     Status status;
 
     public String getName()

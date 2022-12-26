@@ -4,7 +4,11 @@ public enum Location
     STREET ("на улице"),
     STARTROCKETSTREET ("на стартовой площадке"),
     ROCKET ("в ракете"),
-    COSMOS ("в космосе");
+    COSMOS ("в космосе"),
+    SKY ("в небе"),
+    COSMOSCITY ("в Космическом городке"),
+    SUNCITY ("в Солнечном городке");
+
 
     private String status;
 

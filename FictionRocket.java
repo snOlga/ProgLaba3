@@ -1,36 +1,94 @@
 public class FictionRocket extends Rocket
 {
+    @Override
+    public void beMoved(Location newLocation)
+    {
+        this.setLocation(newLocation);
+    }
 
     @Override
-    public void fly(Location location, Character pilot ) throws RocketIsBrokenExeption, NoneOfStatusExeption
+    public void checkAirInRocket(Pilot pilot)
+    {
+        for (int i =  0; i < prog3.rocketTeam.size(); i++)
+        {
+            prog3.rocketTeam.get(i).breathe(this);
+        }
+        pilot.breathe(this);
+
+        System.out.println("В ракете осталось " + air + " единиц воздуха.");
+    }
+
+    @Override
+    public void getLocation()
+    {
+        System.out.println(this.name + " сейчас " + location.getStatus());
+    }
+
+    @Override
+    public void setLocation(Location newLocation)
+    {
+        this.location = newLocation;
+        System.out.println(this.name + " теперь " + location.getStatus());
+    }
+
+    @Override
+    public boolean SwitchOn(Pilot pilot)
+    {
+        return InsideTheRocket.Motor.motorOn(this, pilot);
+    }
+
+    @Override
+    public void SwitchOff(Pilot pilot)
+    {
+
+    }
+
+    @Override
+    public void beHarmed(int harm)
+    {
+        this.health -= harm;
+
+        if (this.health < 30)
+        {
+            this.status = Status.BROKEN;
+            System.out.println(this.name + " теперь " + this.status.getStatus());
+        }
+    }
+
+    @Override
+    public void beThrownForDamage(newObject victim) throws CannotThrowHumans
+    {
+        victim.beHarmed(force);
+    }
+
+    @Override
+    public void fly(Location newLocation, Pilot pilot) throws RocketIsBrokenExeption, NoneOfStatusExeption
     {
         if (this.status == Status.NORMAL)
         {
-            if (motorOn() == false)
+            if (fuel > 40)
             {
-                this.explode(pilot);
-
-                System.out.println(this.name + " взорвалась!");
+                fuel -= 10;
+                setLocation(newLocation);
             }
             else
             {
-                this.location = location;
+                fuel -= 5;
+                setLocation(Location.SKY);
+                System.out.println(this.name + " летит");
+                fuel -= 5;
+                setLocation(newLocation);
+            }
 
-                Character.emotionsForEveryone = Character.Emotions.SCARED;
-
-                System.out.println(this.name + " теперь " + location.getStatus());
-
-                System.out.println("Все теперь " + Character.emotionsForEveryone.getStatus());
-
-                //вызвать go от всех экземпляров класса Character
-                for (int i = 0; i < prog3.characters.size(); i++)
+            //вызвать go от всех экземпляров класса Character
+            for (int i = 0; i < prog3.characters.size(); i++)
+            {
+                if (prog3.characters.get(i).mainLocation != Location.ROCKET && prog3.characters.get(i).mainLocation != Location.STREET && prog3.characters.get(i).cityLocation == Location.COSMOSCITY)
                 {
-                    if (prog3.characters.get(i).location != Location.ROCKET && prog3.characters.get(i).location != Location.STREET)
-                    {
-                        prog3.characters.get(i).go(Location.STREET);
-                    }
+                    prog3.characters.get(i).go(Location.STREET);
                 }
             }
+
         }
         else if (this.status == Status.BROKEN)
         {
@@ -43,9 +101,8 @@ public class FictionRocket extends Rocket
     }
 
     @Override
-    public void explode(Character pilot)
+    public void explode(Pilot pilot)
     {
-        Character.emotionsForEveryone = Character.Emotions.SCARED;
         pilot.status = Character.Status.DIED;
         this.status = Status.BROKEN;
         this.speed = 0;
@@ -54,23 +111,44 @@ public class FictionRocket extends Rocket
     public void doNoize()
     {
         System.out.println("Ракета шумит!");
-        Character.emotionsForEveryone = Character.Emotions.NERVOUS;
     }
 
-    @Override
-    public boolean motorOn()
+    private class InsideTheRocket
     {
-        double randomForMotorStop = Math.random();
+        protected class Motor
+        {
 
-        if (randomForMotorStop > 0.5)
-        {
-            System.out.println(this.name + " не заводится!");
-            return false;
-        }
-        else
-        {
-            System.out.println("Мотор у объекта " + this.name + " гудит!");
-            return true;
+            public static boolean motorOn(FictionRocket rocket, Pilot pilot) throws NotEnoughFuelExeption
+            {
+                if (rocket.fuel >= 50)
+                {
+                    double randomForMotorStop = Math.random();
+
+                    if (randomForMotorStop > 0.5)
+                    {
+                        System.out.println(rocket.name + " не заводится!");
+
+                        double randomForExplosion = Math.random();
+
+                        if (randomForExplosion > 0.5)
+                        {
+                            rocket.explode(pilot);
+
+                            System.out.println(rocket.name + " взорвалась!");
+                        }
+                        return false;
+                    } else
+                    {
+                        System.out.println("Мотор у объекта " + rocket.name + " гудит!");
+                        rocket.fuel -= 10;
+                        return true;
+                    }
+                }
+                else
+                {
+                    throw new NotEnoughFuelExeption("Задано недостаточное количество топлива!");
+                }
+            }
         }
     }
 }

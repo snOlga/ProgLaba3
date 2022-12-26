@@ -1,4 +1,4 @@
-public abstract class Human implements canGo, canShake, canPush, canAsk, canRun, canSee, LookFor
+public abstract class Human extends newObject implements beHarmed, canThrowForDamage, canMove, canShakeObjects, canGo, canShakePeople, canPush, canAsk, canRun, canSee, LookFor, Locatable, LocatableForCity, canGoToAnotherCity
 {
     protected String name;
 
@@ -11,6 +11,13 @@ public abstract class Human implements canGo, canShake, canPush, canAsk, canRun,
     protected String gender;
     Status status;
 
+    protected int health;
+    protected int force;
+
+    public abstract void getEmotion();
+
+    public abstract void setEmotion(Emotions newEmotion);
+
 
     enum Status
     {
@@ -19,7 +26,7 @@ public abstract class Human implements canGo, canShake, canPush, canAsk, canRun,
         ILL ("больной/ая"),
         DIED ("умер/ла");
 
-        private String status;
+        protected String status;
 
         Status (String status)
         {
@@ -39,9 +46,33 @@ public abstract class Human implements canGo, canShake, canPush, canAsk, canRun,
         IMPATIENT ("нетерпеливый/ая"),
         PRIDEFUL ("горделивый/ая");
 
-        private String status;
+        protected String status;
 
         Nature (String status)
+        {
+            this.status = status;
+        }
+
+        public String getStatus()
+        {
+            return status;
+        }
+    }
+
+    enum Emotions
+    {
+        SAD ("грустный/ая"),
+        ANGRY ("злой/ая"),
+        HAPPY ("счастливый/ая"),
+        NORMAL ("обычный/ая"),
+        SCARED ("испугался/ась"),
+        CALM ("спокоен/а"),
+        CONFUSED ("растерянн/а"),
+        NERVOUS ("взволнован/а");
+
+        protected String status;
+
+        Emotions(String status)
         {
             this.status = status;
         }

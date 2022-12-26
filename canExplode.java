@@ -1,4 +1,4 @@
 public interface canExplode
 {
-    public void explode(Character pilot);
+    public void explode(Pilot pilot);
 }

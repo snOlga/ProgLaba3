@@ -1,84 +1,101 @@
 public class Character extends Human
 {
-    Location location = Location.STREET;
-    Emotions emotions = Emotions.NORMAL;
-    Nature nature = Nature.USUAL;
-    Status status = Status.NORMAL;
-    static Emotions emotionsForEveryone;
+    Location mainLocation;
+    Location cityLocation;
+    Emotions emotions;
+    Nature nature;
+    Status status;
 
 
-
-
-
-    enum Emotions
+    @Override
+    public void getEmotion()
     {
-        SAD ("грустный/ая"),
-        ANGRY ("злой/ая"),
-        HAPPY ("счастливый/ая"),
-        NORMAL ("обычный/ая"),
-        SCARED ("испугался/ась"),
-        CALM ("спокоен/а"),
-        CONFUSED ("растерянн/а"),
-        NERVOUS ("взволнован/а");
-
-        private String status;
-
-        Emotions(String status)
-        {
-            this.status = status;
-        }
-
-        public String getStatus()
-        {
-            return status;
-        }
+        System.out.println(this.name + " сейчас " + emotions.getStatus());
     }
 
-
-
-
-
-    public void newEmotion()
+    @Override
+    public void setEmotion(Emotions newEmotion)
     {
-        System.out.println(name + " теперь " + emotions.status);
+        this.emotions = newEmotion;
+        getEmotion();
+    }
 
-        if (this.emotions == Emotions.CONFUSED)
+    @Override
+    public void getLocation()
+    {
+        System.out.println(this.name + " сейчас " + mainLocation.getStatus());
+    }
+
+    @Override
+    public void setLocation(Location newLocation)
+    {
+        this.mainLocation = newLocation;
+        getLocation();
+    }
+
+    @Override
+    public void setLocation(Location newLocation, Location newCityLocation)
+    {
+        this.cityLocation = newCityLocation;
+        this.mainLocation = newLocation;
+        System.out.println(this.name + " теперь " + cityLocation.getStatus() + " " + mainLocation.getStatus());
+    }
+
+    @Override
+    public void throwForDamage(NotAliveObject thrownObject, newObject victim) throws CannotThrowHumans
+    {
+        thrownObject.beThrownForDamage(victim);
+        System.out.println(this.name + " кинул/a " + thrownObject.name + " в " + victim.name);
+    }
+
+    @Override
+    public void beThrownForDamage(newObject victim) throws CannotThrowHumans
+    {
+        throw new CannotThrowHumans("Здесь не кидаются людьми!");
+    }
+
+    @Override
+    public void beHarmed(int harm)
+    {
+        health -= harm;
+        if (health <= 30)
         {
-            System.out.println(name + " растерянно развел/а руками");
+            this.status = Status.PUSHED;
+            this.setEmotion(Emotions.ANGRY);
         }
     }
-
-    public void printLoc()
-    {
-        System.out.println(name + " " + location.getStatus());
-    }
-
 
     @Override
     public void go(Location newLocation)
     {
-        location = newLocation;
-        System.out.println(name + " ушёл/а и теперь " + location.getStatus());
+        System.out.println(name + " ушёл/а");
+        setLocation(newLocation);
+    }
+
+    @Override
+    public void go(Location newCityLocation, Location newLocation)
+    {
+        System.out.println(name + " ушёл/а");
+        setLocation(newLocation, newCityLocation);
     }
 
     @Override
     public void run(Location newLocation)
     {
-        location = newLocation;
-        System.out.println(name + " убежал/а и теперь " + location.getStatus());
+        System.out.println(name + " убежал/а");
+        setLocation(newLocation);
     }
     @Override
     public void shake(Character victim)
     {
         System.out.println(this.name + " трясёт " + victim.name);
-        victim.emotions = Emotions.ANGRY;
-        System.out.println("Теперь " + victim.name + " " + victim.emotions.status);
+        victim.setEmotion(Emotions.ANGRY);
 
-        if(victim.nature == Nature.PRIDEFUL && victim.location == Location.STREET)
+        if(victim.nature == Nature.PRIDEFUL && victim.mainLocation == Location.STREET)
         {
             victim.go(Location.HOUSE);
         }
-        else if(victim.nature == Nature.PRIDEFUL && victim.location == Location.HOUSE)
+        else if(victim.nature == Nature.PRIDEFUL && victim.mainLocation == Location.HOUSE)
         {
             victim.go(Location.STREET);
         }
@@ -89,12 +106,19 @@ public class Character extends Human
     }
 
     @Override
+    public void shake(NotAliveObject victim)
+    {
+        victim.status = NotAliveObject.Status.BROKEN;
+        System.out.println(this.name + " потряс " + victim.name);
+    }
+
+    @Override
     public void push (Character victim)
     {
-        this.emotions = Emotions.ANGRY;
-        victim.emotions = Emotions.SCARED;
+        victim.setEmotion(Emotions.SCARED);
+        System.out.println(this.name + " толкнул " + victim.name + "!");
 
-        victim.status = Status.PUSHED;
+        victim.beHarmed(force);
     }
 
     @Override
@@ -114,14 +138,14 @@ public class Character extends Human
                 System.out.println(this.name + " не дождался/ась ответа");
                 this.shake(victim);
             }
-            if (this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.location == Location.STREET && this.emotions == Emotions.NORMAL)
+            if (this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.mainLocation == Location.STREET && this.emotions == Emotions.NORMAL)
             {
                 victim.go(Location.HOUSE);
-                this.emotions = Emotions.SAD;
-            } else if (this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.location == Location.HOUSE)
+                this.setEmotion(Emotions.SAD);
+            } else if (this.nature == Nature.USUAL && victim.nature == Nature.PRIDEFUL && victim.mainLocation == Location.HOUSE)
             {
                 victim.go(Location.STREET);
-                this.emotions = Emotions.SAD;
+                this.setEmotion(Emotions.SAD);
             }
         }
         else
@@ -141,7 +165,7 @@ public class Character extends Human
             {
                 continue;
             }
-            else if (prog3.characters.get(i).location == location)
+            else if (prog3.characters.get(i).mainLocation == location)
             {
                 System.out.println(prog3.characters.get(i).name);
             }
@@ -151,23 +175,25 @@ public class Character extends Human
     @Override
     public boolean lookFor(newObject object)
     {
-        if (object.location == this.location)
+        if (object.location == this.mainLocation)
         {
-            this.emotions = Emotions.HAPPY;
+            this.setEmotion(Emotions.HAPPY);
             System.out.println(this.name + " нашёл/а " + object.name);
             return true;
         }
         else
         {
-            this.emotions = Emotions.ANGRY;
+            //this.setEmotion(Emotions.ANGRY);
             return false;
         }
     }
 
-
-
-
-
+    @Override
+    public void move(NotAliveObject object, Location newLocation)
+    {
+        object.beMoved(newLocation);
+        System.out.println(this.name + " перемеcтил/а " + object.name);
+    }
 
 
 
@@ -200,7 +226,7 @@ public class Character extends Human
 //        if (obj == null || getClass() != obj.getClass()) return false;
 //
 //        Character character = (Character) obj;
-//        return  gender == character.gender;
+//        return name == character.name;
 //    }
 //
 //    @Override
