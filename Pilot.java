@@ -1,4 +1,4 @@
-public class Pilot extends Character implements PilotRocketSwitcher, canBreatheInRocket
+public class Pilot extends Passeger implements PilotRocketSwitcher, canBreatheInRocket
 {
     @Override
     public boolean SwitchOn(FictionRocket rocket)
@@ -11,11 +11,5 @@ public class Pilot extends Character implements PilotRocketSwitcher, canBreatheI
     public void SwitchOff(FictionRocket rocket)
     {
 
-    }
-//наследовать от пассажира
-    @Override
-    public void breathe(Rocket rocket)
-    {
-        rocket.air--;
     }
 }
