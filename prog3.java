@@ -17,8 +17,7 @@ public class prog3
         Character stranger = createCharacter("Незнакомец");
         stranger.setLocation(Location.HOUSE, Location.COSMOSCITY);
 
-        Pilot neznaykaPilot = new Pilot();
-        neznaykaPilot.name = "Незнайка";
+        Pilot neznaykaPilot = createPilot("Незнайка");
 
         FictionRocket rocket = new FictionRocket();
         rocket.name = "Ракета";
@@ -34,7 +33,7 @@ public class prog3
 
         znayka.throwForDamage(rock, rocket);
         System.out.println(rocket.health);
-        rocket.checkAirInRocket(neznaykaPilot);
+        rocket.checkAirInRocket();
 
 
         znayka.nature = Human.Nature.IMPATIENT;
@@ -114,6 +113,14 @@ public class prog3
     static Passeger createPasseger(String name)
     {
         Passeger object = new Passeger();
+        object.name = name;
+        rocketTeam.add(object);
+        return object;
+    }
+
+    static Pilot createPilot(String name)
+    {
+        Pilot object = new Pilot();
         object.name = name;
         rocketTeam.add(object);
         return object;
