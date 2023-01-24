@@ -9,10 +9,12 @@ public class FictionRocket extends Rocket
     @Override
     public void checkAirInRocket()
     {
-        for (int i =  0; i < prog3.rocketTeam.size(); i++)
-        {
-            prog3.rocketTeam.get(i).breathe(this);
-        }
+//        for (int i =  0; i < prog3.rocketTeam.size(); i++)
+//        {
+//            prog3.rocketTeam.get(i).breathe(this);
+//        }
+
+        prog3.rocketTeam.forEach(passeger -> passeger.breathe(this));
 
         System.out.println("В ракете осталось " + air + " единиц воздуха.");
     }
